@@ -47,6 +47,13 @@
       width: 122px;
     }
   </style>
+<script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "debe7cf18a694ad0bdba4a84fe78c9d8"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
 </head>
 
 <body>
@@ -84,10 +91,20 @@
       <button>End Timer</button>
       <button>Console Trace</button>
       <button>Trigger a Global Error</button>
+      <button>Custom Error Demo</button>
     </section>
   </main>
 
   <script>
+      window.onerror = function (message, source, lineno, colno, error) {
+      console.log("Global Error Caught!");
+      console.log("Message:", message);
+      console.log("Source:", source);
+      console.log("Line:", lineno);
+      console.log("Column:", colno);
+      console.log("Error object:", error);
+    };
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -102,6 +119,121 @@
 
     // Start your code here
     // You may move this JS to another file if you wish
+  errorBtns[0].addEventListener('click', () => {
+    console.log('Console Log Demo');
+  });
+
+  errorBtns[1].addEventListener('click', () => {
+    console.error('Console Error Demo');
+  });
+
+  errorBtns[2].addEventListener('click', () => {
+    console.count('Count Button');
+  });
+
+  errorBtns[3].addEventListener('click', () => {
+    console.warn('Console Warn Demo');
+  });
+
+  errorBtns[4].addEventListener('click', () => {
+    let isTrue = false;
+    console.assert(isTrue, 'Assertion failed: isTrue is false');
+  });
+
+  errorBtns[5].addEventListener('click', () => {
+    console.clear();
+  });
+
+  errorBtns[6].addEventListener('click', () => {
+    console.dir(errorBtns[6]);
+  });
+
+  errorBtns[7].addEventListener('click', () => {
+    console.dirxml(errorBtns[7]);
+  });
+
+  errorBtns[8].addEventListener('click', () => {
+    console.group();
+  });
+
+  errorBtns[9].addEventListener('click', () => {
+    console.groupEnd();
+  });
+
+  errorBtns[10].addEventListener('click', () => {
+    const data = [
+      { name: 'Apple', price: 1.5 },
+      { name: 'Banana', price: 0.75 },
+      { name: 'Cherry', price: 2.0 }
+    ];
+    console.table(data);
+  });
+
+  errorBtns[11].addEventListener('click', () => {
+    console.time('Timer');
+  });
+
+  errorBtns[12].addEventListener('click', () => {
+    console.timeEnd('Timer');
+  });
+
+errorBtns[13].addEventListener('click', () => {
+  function startTrace() {
+    stepOne();
+  }
+
+  function stepOne() {
+    stepTwo();
+  }
+
+  function stepTwo() {
+    finalStep();
+  }
+
+  function finalStep() {
+    console.trace('Trace from finalStep');
+  }
+
+  startTrace();
+});
+
+  errorBtns[14].addEventListener('click', () => {
+    // Trigger a global error
+    nonExistentFunction();
+  });
+
+  // try & catch
+    class CalculationError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = 'CalculationError';
+    }
+  }
+
+  errorBtns[15].addEventListener('click', () => {
+    try {
+      let a = document.querySelector('#first-num').value;
+      let b = document.querySelector('#second-num').value;
+
+      if (isNaN(a) || isNaN(b)) {
+        throw new CalculationError('Inputs must be valid numbers!');
+      }
+
+      // Simulate a failure (optional)
+      if (Number(b) === 0) {
+        throw new CalculationError('Cannot divide by zero!');
+      }
+
+      console.log('Calculation passed without errors.');
+
+    } catch (err) {
+      if (err instanceof CalculationError) {
+        console.error(`Custom Error Caught: ${err.name} - ${err.message}`);
+      } else {
+        console.error('Unexpected Error:', err);
+      }
+    }
+  });
   </script>
 </body>
 
